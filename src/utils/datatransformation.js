@@ -1,5 +1,6 @@
 /* eslint-disable array-callback-return */
 import getDateFromTimeStamp from './formatDate';
+import sortByDateDescending from './global';
 import convertFromWattToKiloWatt from './wattToKilowatt';
 
 const transformingData = (rawData) => {
@@ -25,6 +26,7 @@ const transformingData = (rawData) => {
       });
       matchingEntry[item.label] = data.energy;
     });
+    result.sort(sortByDateDescending);
     return result;
   }, []);
 

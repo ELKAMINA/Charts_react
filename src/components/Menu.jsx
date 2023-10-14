@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Menu } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
@@ -15,6 +15,7 @@ function MainMenu() {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const allProjects = useAppSelector(selectProjects);
+  const memoizedProjects = useMemo(() => allProjects, [allProjects]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -71,7 +72,7 @@ function MainMenu() {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        {allProjects.map((menu, index) => (
+        {memoizedProjects.map((menu, index) => (
           <MenuItem
             key={menu.uuid}
             onClick={handleProjectClick}

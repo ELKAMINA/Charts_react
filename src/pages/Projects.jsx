@@ -8,12 +8,11 @@ import { fetchEnergy } from '../redux/Projects/projectSlice';
 
 function Projects(uuidObject) {
   const dispatch = useAppDispatch();
-  // const location = window.location.pathname;
   const { uuid } = uuidObject;
-  console.log('uuid ', uuid);
+  console.log('uuid is == ', uuid);
   React.useEffect(() => {
     dispatch(fetchEnergy(uuid));
-  }, []);
+  }, [uuidObject]);
 
   return (
     <>
