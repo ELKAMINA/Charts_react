@@ -50,13 +50,11 @@ export function fetchAllUserProjects() {
 }
 
 export function fetchEnergy(uuid) {
-  console.log('uuid ', uuid);
   return async (dispatch) => {
     dispatch(startLoading());
     await axios
       .get(`/api/energy?uuid=${uuid}`)
       .then((res) => {
-        console.log('la response ', res);
         dispatch(getEnergyConsumption(res.data));
         dispatch(finishLoading());
       })

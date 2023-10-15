@@ -1,5 +1,5 @@
 /* eslint-disable array-callback-return */
-import getDateFromTimeStamp from './formatDate';
+import { getDateFromTimeStamp } from './formatDate';
 import sortByDateDescending from './global';
 import convertFromWattToKiloWatt from './wattToKilowatt';
 

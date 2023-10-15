@@ -6,12 +6,17 @@ import React from 'react';
 // import { useTheme } from '@mui/material/styles';
 import { ResponsiveBar } from '@nivo/bar';
 import { setRef } from '@mui/material';
+import {
+  differenceInDays, eachWeekOfInterval, startOfToday, endOfToday, format,
+} from 'date-fns';
 import PeriodFilter from './Filter';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import transformingData from '../utils/datatransformation';
 import { fetchEnergy, selectEnergy } from '../redux/Projects/projectSlice';
 import agregation from '../utils/dataAgregBymonth';
 import { formatYaxis, generateTickValues, getMaxValue } from '../utils/barChartAxis';
+import { ChangingFormatDate } from '../utils/formatDate';
+
 // import mockBarData from '../test';
 
 function BarChart() {
@@ -21,16 +26,17 @@ function BarChart() {
   const [keys, setKeys] = React.useState([]);
   const path = window.location.pathname;
   const uuid = path.split('/')[2];
+  let bottomTickValues;
+  const [showChart, setShowChart] = React.useState(true);
 
   React.useEffect(() => {
     dispatch(fetchEnergy(uuid));
-  }, [dispatch]);
+  }, [dispatch, uuid]);
 
   const rawData = useAppSelector(selectEnergy);
   React.useEffect(() => {
     const getData = async () => {
       try {
-        console.log('rawdAta ICIIII ', rawData);
         const result = transformingData(rawData);
         setTransformedData(result);
         if (result[0] && result[0].labels) {
@@ -43,7 +49,10 @@ function BarChart() {
     };
 
     getData();
-  }, []);
+    return () => {
+      setKeys([]);
+    };
+  }, [rawData]);
 
   const filteredperiod = React.useRef([]);
   // eslint-disable-next-line no-unused-vars
@@ -79,6 +88,15 @@ function BarChart() {
           const itemDate = new Date(item.date);
           return itemDate >= fromDate && itemDate <= toDate;
         });
+        const startDate = new Date(filteredperiod.current[0]?.date);
+        const endDate = new Date(filteredperiod.current[filteredperiod.current.length - 1]?.date);
+        const dateDifference = differenceInDays(endDate, startDate);
+        console.log('date difference ', dateDifference);
+        if (dateDifference > 35) {
+          setShowChart(false);
+        } else {
+          setShowChart(true);
+        }
         setChange((prevChange) => prevChange + 1);
         break;
       case 'YearMonthly':
@@ -88,11 +106,12 @@ function BarChart() {
     }
     maxDatavAlue = getMaxValue(filteredperiod.current);
     getTickValues = generateTickValues(maxDatavAlue);
-  }, [choosenPeriod]);
+  }, [choosenPeriod, showChart]);
 
   return (
     <>
       <PeriodFilter choosenPeriod={choosenPeriod} setChoosenPeriod={setChoosenPeriod} />
+      {showChart && (
       <ResponsiveBar
         data={filteredperiod.current}
         keys={keys}
@@ -141,15 +160,17 @@ function BarChart() {
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 40,
+          tickRotation: 60,
           legend: 'Time period',
           legendPosition: 'middle',
           legendOffset: 46,
+          tickValues: bottomTickValues,
+          format: (value) => ChangingFormatDate(value),
         }}
         axisLeft={{
           tickSize: 7,
           tickPadding: 7,
-          tickRotation: 10,
+          tickRotation: 20,
           legend: 'Enegy',
           legendPosition: 'middle',
           legendOffset: -82,
@@ -198,6 +219,13 @@ function BarChart() {
         ariaLabel="Nivo bar chart"
         barAriaLabel={(e) => `${e.id}: ${e.formattedValue} in country: ${e.indexValue}`}
       />
+
+      )}
+      {!showChart && (
+        <div style={{ color: 'red', textAlign: 'center' }}>
+          The time period is too large to display. Please select a smaller range( under 35 days)
+        </div>
+      )}
 
     </>
   );

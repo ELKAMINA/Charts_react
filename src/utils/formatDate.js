@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns';
+
 const getDateFromTimeStamp = (timestamp) => {
   const date = new Date(timestamp);
 
@@ -10,4 +12,9 @@ const getDateFromTimeStamp = (timestamp) => {
   return (formattedDate);
 };
 
-export default getDateFromTimeStamp;
+function ChangingFormatDate(dateString) {
+  const date = parseISO(dateString);
+  return format(date, 'd/M');
+}
+
+export { getDateFromTimeStamp, ChangingFormatDate };
