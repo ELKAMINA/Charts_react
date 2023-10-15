@@ -10,11 +10,10 @@ function Projects() {
       <Container sx={{
         marginTop: '5%',
         alignItems: 'center',
-        width: '80vw',
+        width: '100%',
         height: '60vh',
       }}
       >
-        {/* <div> TOTO </div> */}
         <BarChart />
       </Container>
     </>

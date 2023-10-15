@@ -37,7 +37,6 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
 
   const handleSelect = (ranges) => {
     const { selection } = ranges;
-    // console.log('range date ', selection);
   };
 
   React.useEffect(() => {
@@ -45,9 +44,15 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
 
   return (
     <>
+      <Typography sx={{
+        m: 2,
+      }}
+      >
+        Choose your time period
+      </Typography>
       <Box sx={{ minWidth: '30vw' }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" style={{ width: 'auto' }}>Time period</InputLabel>
+          <InputLabel id="demo-simple-select-label" style={{ width: 'auto' }}>Period</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"

@@ -111,7 +111,7 @@ function BarChart() {
   return (
     <>
       <PeriodFilter choosenPeriod={choosenPeriod} setChoosenPeriod={setChoosenPeriod} />
-      {showChart && (
+      {showChart && keys.length > 0 && filteredperiod.current.length > 0 && (
       <ResponsiveBar
         data={filteredperiod.current}
         keys={keys}
@@ -161,9 +161,9 @@ function BarChart() {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 60,
-          legend: 'Time period',
+          legend: 'Period',
           legendPosition: 'middle',
-          legendOffset: 46,
+          legendOffset: 43,
           tickValues: bottomTickValues,
           format: (value) => ChangingFormatDate(value),
         }}
@@ -196,18 +196,21 @@ function BarChart() {
             anchor: 'bottom-right',
             direction: 'column',
             justify: false,
-            translateX: 200,
+            translateX: 100,
             translateY: -30,
-            itemsSpacing: 2,
-            itemWidth: 150,
+            itemsSpacing: 0,
+            itemDirection: 'right-to-left',
+            itemWidth: 80,
             itemHeight: 20,
-            itemDirection: 'left-to-right',
-            itemOpacity: 0.85,
-            symbolSize: 20,
+            itemOpacity: 0.75,
+            symbolSize: 10,
+            symbolShape: 'circle',
+            symbolBorderColor: 'rgba(0, 0, 0, .5)',
             effects: [
               {
                 on: 'hover',
                 style: {
+                  itemBackground: 'rgba(0, 0, 0, .03)',
                   itemOpacity: 1,
                 },
               },

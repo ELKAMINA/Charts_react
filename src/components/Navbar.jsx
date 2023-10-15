@@ -1,37 +1,54 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import {
-  Container, Avatar, Typography,
+  Button,
+  Container, Typography,
 } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 import Toolbar from '@mui/material/Toolbar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import smartImpulseLogo from '../assets/smat-impulse-logo.png';
+import { useNavigate } from 'react-router';
 import MainMenu from './Menu';
+import smartImpulseLogo from '../assets/smat-impulse-logo.png';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: 'rgba(145,146,146,255)',
-    },
+    // primary: {
+    //   main: '#999999',
+    // },
   },
 });
 
 function Navbar() {
+  const navigate = useNavigate();
+  const handleImageClick = () => {
+    navigate('/');
+  };
   return (
     <ThemeProvider theme={theme}>
       <AppBar
         position="static"
-        color="primary"
         sx={{
-          flex: 'display',
+          backgroundColor: 'rgba(145, 146, 146, 0.6)',
+          display: 'flex',
           flexDirection: 'row',
+          alignItems: 'center',
         }}
       >
         <Container>
-          <img
-            src={smartImpulseLogo}
-            alt="smart-impulse-logo"
-          />
+          <Button onClick={handleImageClick}>
+            <img
+              src={smartImpulseLogo}
+              alt="smart-impulse-logo"
+              style={{
+                width: '100%',
+                maxWidth: '8vw',
+                minWidth: '8vh',
+                height: 'auto',
+              }}
+            />
+
+          </Button>
         </Container>
         <Container>
           <MainMenu />
@@ -44,32 +61,21 @@ function Navbar() {
               justifyContent: 'flex-end',
             }}
           >
-            <Avatar
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNUKXpZECK0fPRdVpTN1mP828iGNWf8Apne_NMRYM66k9sPfY3Ehbux1vzlOOOPLOzkM0&usqp=CAU"
+            <PersonIcon
+              fontSize="large"
               sx={{
-                margin: '5px',
-                width: {
-                  xs: 10,
-                  sm: 20,
-                  md: 30,
-                  lg: 50,
-                },
-                height: {
-                  xs: 10,
-                  sm: 20,
-                  md: 30,
-                  lg: 50,
-                },
+                m: 2,
               }}
             />
             <Typography sx={{
               fontSize: {
-                xs: '1rem',
-                sm: '1.1rem',
-                md: '1.4rem',
-                lg: '1.8rem',
-
+                xs: 11,
+                sm: 15,
+                md: 20,
+                lg: 25,
+                color: 'white',
               },
+              fontWeight: 'bold',
             }}
             >
               userX

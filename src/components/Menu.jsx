@@ -32,7 +32,6 @@ function MainMenu() {
     console.log(event.target.innerText);
     const projectName = event.target.innerText;
     const exist = allProjects.find((el) => el.name === projectName);
-    // console.log('existing ', exist);
     if (exist) navigate(`/project/${exist.uuid}`);
   };
 
@@ -48,12 +47,13 @@ function MainMenu() {
         onClick={handleClick}
         sx={() => ({
           fontSize: {
-            xs: '0.5rem',
-            sm: '0.7rem',
-            md: '0.8rem',
-            lg: '1rem',
+            xs: 11,
+            sm: 15,
+            md: 20,
+            lg: 25,
           },
-          color: 'yellow',
+          color: 'white',
+          fontWeight: 'bold',
         })}
       >
         My projects
