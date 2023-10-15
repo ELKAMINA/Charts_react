@@ -89,7 +89,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
               <DatePicker
-                label={'""month", "day, "year"'}
+                label={'"month", "day, "year"'}
                 views={['month', 'day', 'year']}
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
@@ -102,8 +102,8 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
               <DatePicker
-                label={'"day" and "month" and "year"'}
-                views={['day', 'month', 'year']}
+                label={'"month", "day, "year"'}
+                views={['month', 'day', 'year']}
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
                   ...choosenPeriod,

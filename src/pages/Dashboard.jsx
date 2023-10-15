@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router';
 import Navbar from '../components/Navbar';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchAllUserProjects, selectProjects } from '../redux/Projects/projectSlice';
@@ -17,13 +18,22 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function Dashboard() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     dispatch(fetchAllUserProjects());
   }, [dispatch]);
 
   const userProjects = useAppSelector(selectProjects);
-  console.log('projects ', userProjects);
+  const handleClick = async (
+    event,
+  ) => {
+    event.preventDefault();
+    console.log(event.target.innerText);
+    const projectName = event.target.innerText;
+    const exist = userProjects.find((el) => el.name === projectName);
+    if (exist) navigate(`/project/${exist.uuid}`);
+  };
   return (
     <>
       <Navbar />
@@ -87,6 +97,7 @@ function Dashboard() {
               borderRadius: 2,
               alignItems: 'center',
             }}
+            onClick={handleClick}
           >
             {el.name}
           </Item>
