@@ -84,12 +84,12 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
               <DatePicker
-                label={'"day" and "month" and "year"'}
-                views={['day', 'month', 'year']}
+                label={'""month", "day, "year"'}
+                views={['month', 'day', 'year']}
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
                   ...choosenPeriod,
-                  from: `${String(date.$d.getMonth() + 1).padStart(2, '0')}-${String(date.$d.getDate()).padStart(2, '0')}-${date.$d.getFullYear()}`,
+                  from: `${String(date.$d.getFullYear())}-${String(date.$d.getMonth() + 1).padStart(2, '0')}-${String(date.$d.getDate()).padStart(2, '0')}`,
                 })}
               />
             </DemoContainer>
@@ -102,7 +102,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
                   ...choosenPeriod,
-                  to: `${String(date.$d.getMonth() + 1).padStart(2, '0')}-${String(date.$d.getDate()).padStart(2, '0')}-${date.$d.getFullYear()}`,
+                  to: `${String(date.$d.getFullYear())}-${String(date.$d.getMonth() + 1).padStart(2, '0')}-${String(date.$d.getDate()).padStart(2, '0')}`,
                 })}
               />
             </DemoContainer>

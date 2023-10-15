@@ -41,10 +41,18 @@ function BarChart() {
           // console.log('toute la data ', choosenPeriod);
           return (year === choosenPeriod.year && month === choosenPeriod.month);
         });
-        console.log('filteredPeriod INSIDE USEEFFEcT', filteredperiod.current);
         setChange((prevChange) => prevChange + 1);
         break;
       case 'Personalised':
+        console.log('data ', typeof (transformedData[0].date));
+        console.log('choosen Period ', choosenPeriod);
+        const fromDate = new Date(choosenPeriod.from);
+        const toDate = new Date(choosenPeriod.to);
+        filteredperiod.current = transformedData.filter((item) => {
+          const itemDate = new Date(item.date);
+          return itemDate >= fromDate && itemDate <= toDate;
+        });
+        setChange((prevChange) => prevChange + 1);
         break;
     }
   }, [choosenPeriod]);
