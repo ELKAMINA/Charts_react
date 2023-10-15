@@ -9,7 +9,7 @@ import { fetchEnergy } from '../redux/Projects/projectSlice';
 function Projects(uuidObject) {
   const dispatch = useAppDispatch();
   const { uuid } = uuidObject;
-  console.log('uuid is == ', uuid);
+  // console.log('uuid is == ', uuid);
   React.useEffect(() => {
     dispatch(fetchEnergy(uuid));
   }, [uuidObject]);

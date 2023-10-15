@@ -39,6 +39,11 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
     const { selection } = ranges;
     console.log('range date ', selection);
   };
+
+  React.useEffect(() => {
+
+  }, [timePeriod, daily, monthly, yearly, personalised]);
+
   return (
     <>
       <Box sx={{ minWidth: '30vw' }}>
@@ -52,7 +57,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
             onChange={handleChange}
           >
             <MenuItem value="Daily">Daily</MenuItem>
-            <MenuItem value="Weekly">Weekly</MenuItem>
+            <MenuItem value="Personalised">Personalised</MenuItem>
             <MenuItem value="Monthly">Monthly</MenuItem>
           </Select>
         </FormControl>
@@ -74,7 +79,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
         </DemoContainer>
       </LocalizationProvider>
       )}
-      { timePeriod === 'Personalized' && (
+      { timePeriod === 'Personalised' && (
         <>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
@@ -84,8 +89,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
                   ...choosenPeriod,
-                  // from: `${date.day}-${date.month}-${date.year}`,
-                  from: date,
+                  from: `${String(date.$d.getMonth() + 1).padStart(2, '0')}-${String(date.$d.getDate()).padStart(2, '0')}-${date.$d.getFullYear()}`,
                 })}
               />
             </DemoContainer>
@@ -98,8 +102,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
                   ...choosenPeriod,
-                  // to: `${date.day}-${date.month}-${date.year}`,
-                  to: date,
+                  to: `${String(date.$d.getMonth() + 1).padStart(2, '0')}-${String(date.$d.getDate()).padStart(2, '0')}-${date.$d.getFullYear()}`,
                 })}
               />
             </DemoContainer>

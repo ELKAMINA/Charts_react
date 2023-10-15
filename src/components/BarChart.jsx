@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-case-declarations */
 /* eslint-disable default-case */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -11,10 +12,13 @@ import { selectEnergy } from '../redux/Projects/projectSlice';
 // import mockBarData from '../test';
 
 function BarChart() {
-  const filteredperiod = React.useRef([new Date()]);
   const rawData = useAppSelector(selectEnergy);
+  const [change, setChange] = React.useState(0);
   const transformedData = transformingData(rawData);
-  console.log('data transformée par date ', transformedData);
+  // const filteredperiod = React.useRef([transformedData[transformedData.length - 1]]);
+  const filteredperiod = React.useRef([]);
+  // console.log('data transformée par date ', transformedData);
+  // eslint-disable-next-line no-unused-vars
   const keys = transformedData[0].labels.map((e) => e.label);
   const [choosenPeriod, setChoosenPeriod] = React.useState({
     range: '',
@@ -25,25 +29,29 @@ function BarChart() {
     year: '',
   });
   React.useEffect(() => {
-    console.log('choosen ', choosenPeriod);
     switch (choosenPeriod.range) {
       case 'Daily':
         const formattedDate = `${choosenPeriod.year}-${choosenPeriod.month}-${choosenPeriod.day}`;
-        console.log('formatteddAte ', formattedDate);
         filteredperiod.current = transformedData.filter((el) => el.date === formattedDate);
         break;
       case 'Monthly':
         filteredperiod.current = transformedData.filter((el) => {
           const year = el.date.split('-')[0];
           const month = el.date.split('-')[1];
+          // console.log('toute la data ', choosenPeriod);
           return (year === choosenPeriod.year && month === choosenPeriod.month);
         });
+        console.log('filteredPeriod INSIDE USEEFFEcT', filteredperiod.current);
+        setChange((prevChange) => prevChange + 1);
+        break;
+      case 'Personalised':
         break;
     }
   }, [choosenPeriod]);
 
-  console.log('les keys ', keys);
-  // const test = transformedData.filter((el) => el.date < '2020-06-06');
+  React.useEffect(() => {
+
+  }, [change]);
 
   console.log('filteredperiod ', filteredperiod.current);
   return (

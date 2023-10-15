@@ -43,7 +43,7 @@ export function fetchEnergy(uuid) {
     await axios
       .get(`/api/energy?uuid=${uuid}`)
       .then((res) => {
-        console.log('la response ', res);
+        // console.log('la response ', res);
         dispatch(getEnergyConsumption(res.data));
       })
       .catch((e) => {
