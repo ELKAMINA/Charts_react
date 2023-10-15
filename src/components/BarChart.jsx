@@ -5,21 +5,50 @@
 import React from 'react';
 // import { useTheme } from '@mui/material/styles';
 import { ResponsiveBar } from '@nivo/bar';
+import { setRef } from '@mui/material';
 import PeriodFilter from './Filter';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import transformingData from '../utils/datatransformation';
-import { selectEnergy } from '../redux/Projects/projectSlice';
+import { fetchEnergy, selectEnergy } from '../redux/Projects/projectSlice';
+import agregation from '../utils/dataAgregBymonth';
+import { formatYaxis, generateTickValues, getMaxValue } from '../utils/barChartAxis';
 // import mockBarData from '../test';
 
 function BarChart() {
-  const rawData = useAppSelector(selectEnergy);
+  const dispatch = useAppDispatch();
   const [change, setChange] = React.useState(0);
-  const transformedData = transformingData(rawData);
-  // const filteredperiod = React.useRef([transformedData[transformedData.length - 1]]);
+  const [transformedData, setTransformedData] = React.useState([]);
+  const [keys, setKeys] = React.useState([]);
+  const path = window.location.pathname;
+  const uuid = path.split('/')[2];
+
+  React.useEffect(() => {
+    dispatch(fetchEnergy(uuid));
+  }, [dispatch]);
+
+  const rawData = useAppSelector(selectEnergy);
+  React.useEffect(() => {
+    const getData = async () => {
+      try {
+        console.log('rawdAta ICIIII ', rawData);
+        const result = transformingData(rawData);
+        setTransformedData(result);
+        if (result[0] && result[0].labels) {
+          const k = result[0].labels.map((e) => e.label);
+          setKeys(k);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    getData();
+  }, []);
+
   const filteredperiod = React.useRef([]);
-  // console.log('data transformée par date ', transformedData);
   // eslint-disable-next-line no-unused-vars
-  const keys = transformedData[0].labels.map((e) => e.label);
+  let maxDatavAlue;
+  let getTickValues;
   const [choosenPeriod, setChoosenPeriod] = React.useState({
     range: '',
     from: '',
@@ -30,22 +59,20 @@ function BarChart() {
   });
   React.useEffect(() => {
     switch (choosenPeriod.range) {
-      case 'Daily':
+      case 'Day':
         const formattedDate = `${choosenPeriod.year}-${choosenPeriod.month}-${choosenPeriod.day}`;
         filteredperiod.current = transformedData.filter((el) => el.date === formattedDate);
+        setChange((prevChange) => prevChange + 1);
         break;
-      case 'Monthly':
+      case 'MonthDaily':
         filteredperiod.current = transformedData.filter((el) => {
           const year = el.date.split('-')[0];
           const month = el.date.split('-')[1];
-          // console.log('toute la data ', choosenPeriod);
           return (year === choosenPeriod.year && month === choosenPeriod.month);
         });
         setChange((prevChange) => prevChange + 1);
         break;
-      case 'Personalised':
-        console.log('data ', typeof (transformedData[0].date));
-        console.log('choosen Period ', choosenPeriod);
+      case 'PersonalisedDaily':
         const fromDate = new Date(choosenPeriod.from);
         const toDate = new Date(choosenPeriod.to);
         filteredperiod.current = transformedData.filter((item) => {
@@ -54,27 +81,28 @@ function BarChart() {
         });
         setChange((prevChange) => prevChange + 1);
         break;
+      case 'YearMonthly':
+        filteredperiod.current = agregation(transformedData, choosenPeriod.year);
+        setChange((prevChange) => prevChange + 1);
+        break;
     }
+    maxDatavAlue = getMaxValue(filteredperiod.current);
+    getTickValues = generateTickValues(maxDatavAlue);
   }, [choosenPeriod]);
 
-  React.useEffect(() => {
-
-  }, [change]);
-
-  console.log('filteredperiod ', filteredperiod.current);
   return (
     <>
       <PeriodFilter choosenPeriod={choosenPeriod} setChoosenPeriod={setChoosenPeriod} />
       <ResponsiveBar
         data={filteredperiod.current}
-        keys={transformedData[0].labels.map((el) => el.label)}
-        indexBy="date"
+        keys={keys}
+        indexBy={choosenPeriod.range !== 'YearMonthly' ? 'date' : 'month'}
         margin={{
-          top: 50, right: 130, bottom: 50, left: 60,
+          top: 30, right: 130, bottom: 50, left: 150,
         }}
         padding={0.4}
         innerPadding={1}
-        maxValue={8000}
+        maxValue={maxDatavAlue}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: false }}
         valueFormat=" >-"
@@ -113,20 +141,20 @@ function BarChart() {
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 0,
-          legend: 'country',
+          tickRotation: 40,
+          legend: 'Time period',
           legendPosition: 'middle',
-          legendOffset: 32,
+          legendOffset: 46,
         }}
         axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
+          tickSize: 7,
+          tickPadding: 7,
+          tickRotation: 10,
           legend: 'Enegy',
           legendPosition: 'middle',
-          legendOffset: -40,
-          tickValues: [0, 500, 1000, 1500, 2000, 2500, 3500, 4000, 4500,
-            5000, 5500, 6000, 6500, 7000, 7500, 8000],
+          legendOffset: -82,
+          tickValues: getTickValues,
+          format: formatYaxis,
         }}
         enableGridX
         enableLabel={false}
@@ -147,10 +175,10 @@ function BarChart() {
             anchor: 'bottom-right',
             direction: 'column',
             justify: false,
-            translateX: 120,
-            translateY: 0,
+            translateX: 200,
+            translateY: -30,
             itemsSpacing: 2,
-            itemWidth: 120,
+            itemWidth: 150,
             itemHeight: 20,
             itemDirection: 'left-to-right',
             itemOpacity: 0.85,
@@ -167,7 +195,7 @@ function BarChart() {
         ]}
         animate={false}
         role="application"
-        ariaLabel="Nivo bar chart demo"
+        ariaLabel="Nivo bar chart"
         barAriaLabel={(e) => `${e.id}: ${e.formattedValue} in country: ${e.indexValue}`}
       />
 

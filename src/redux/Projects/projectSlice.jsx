@@ -6,6 +6,7 @@ import axios from 'axios';
 const initialState = {
   allProjects: [],
   energyConsumed: [],
+  isLoading: true,
 };
 
 export const projectSlice = createSlice({
@@ -18,12 +19,22 @@ export const projectSlice = createSlice({
     getEnergyConsumption: (state, action) => {
       state.energyConsumed = [...action.payload];
     },
+    startLoading: (state) => {
+      state.isLoading = true;
+    },
+    finishLoading: (state) => {
+      state.isLoading = false;
+    },
+
   },
 });
 
-export const { getAllProjects, getEnergyConsumption } = projectSlice.actions;
+export const {
+  getAllProjects, getEnergyConsumption, startLoading, finishLoading,
+} = projectSlice.actions;
 export const selectProjects = (state) => state.persistedReducer.project.allProjects;
 export const selectEnergy = (state) => state.persistedReducer.project.energyConsumed;
+export const selectLoading = (state) => state.persistedReducer.project.isLoading;
 
 export function fetchAllUserProjects() {
   return async (dispatch) => {
@@ -39,14 +50,19 @@ export function fetchAllUserProjects() {
 }
 
 export function fetchEnergy(uuid) {
+  console.log('uuid ', uuid);
   return async (dispatch) => {
+    dispatch(startLoading());
     await axios
       .get(`/api/energy?uuid=${uuid}`)
       .then((res) => {
-        // console.log('la response ', res);
+        console.log('la response ', res);
         dispatch(getEnergyConsumption(res.data));
+        dispatch(finishLoading());
       })
       .catch((e) => {
+        dispatch(finishLoading());
+        console.log('Test ');
         console.error(e);
       });
   };

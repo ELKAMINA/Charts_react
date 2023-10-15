@@ -37,11 +37,10 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
 
   const handleSelect = (ranges) => {
     const { selection } = ranges;
-    console.log('range date ', selection);
+    // console.log('range date ', selection);
   };
 
   React.useEffect(() => {
-
   }, [timePeriod, daily, monthly, yearly, personalised]);
 
   return (
@@ -56,13 +55,14 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
             label="Period"
             onChange={handleChange}
           >
-            <MenuItem value="Daily">Daily</MenuItem>
-            <MenuItem value="Personalised">Personalised</MenuItem>
-            <MenuItem value="Monthly">Monthly</MenuItem>
+            <MenuItem value="Day">Day</MenuItem>
+            <MenuItem value="PersonalisedDaily">Personalised - Daily</MenuItem>
+            <MenuItem value="MonthDaily">Month - Daily</MenuItem>
+            <MenuItem value="YearMonthly">Year - Monthly</MenuItem>
           </Select>
         </FormControl>
       </Box>
-      { timePeriod === 'Daily' && (
+      { timePeriod === 'Day' && (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
           <DatePicker
@@ -73,13 +73,13 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
               ...choosenPeriod,
               day: String(date.$d.getDate()).padStart(2, '0'),
               month: String(date.$d.getMonth() + 1).padStart(2, '0'),
-              year: date.$d.getFullYear(),
+              year: String(date.$d.getFullYear()),
             })}
           />
         </DemoContainer>
       </LocalizationProvider>
       )}
-      { timePeriod === 'Personalised' && (
+      { timePeriod === 'PersonalisedDaily' && (
         <>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
@@ -109,7 +109,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
           </LocalizationProvider>
         </>
       )}
-      { timePeriod === 'Monthly' && (
+      { timePeriod === 'MonthDaily' && (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -125,7 +125,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
           </DemoContainer>
         </LocalizationProvider>
       )}
-      { timePeriod === 'Yearly' && (
+      { timePeriod === 'YearMonthly' && (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DatePicker']}>
             <DatePicker
@@ -134,7 +134,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
               value={yearly}
               onChange={(date) => setChoosenPeriod({
                 ...choosenPeriod,
-                year: date.year,
+                year: String(date.$d.getFullYear()),
               })}
             />
           </DemoContainer>

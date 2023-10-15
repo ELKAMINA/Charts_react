@@ -32,14 +32,10 @@ function MainMenu() {
     console.log(event.target.innerText);
     const projectName = event.target.innerText;
     const exist = allProjects.find((el) => el.name === projectName);
+    // console.log('existing ', exist);
     if (exist) navigate(`/project/${exist.uuid}`);
   };
 
-  // React.useEffect(() => {
-  //   dispatch(fetchAllUserProjects());
-  // }, [allProjects]);
-
-  // console.log('allProjects ', allProjects);
   return (
     <div>
       <Button
