@@ -29,7 +29,6 @@ function Dashboard() {
     event,
   ) => {
     event.preventDefault();
-    console.log(event.target.innerText);
     const projectName = event.target.innerText;
     const exist = userProjects.find((el) => el.name === projectName);
     if (exist) navigate(`/project/${exist.uuid}`);

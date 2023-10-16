@@ -1,4 +1,6 @@
 /* eslint-disable no-plusplus */
+
+/* Formatter les données pour l'affichage de la légende */
 function getMaxValue(data) {
   let max = 0;
   data.forEach((datum) => {
@@ -24,6 +26,7 @@ function generateTickValues(maxValue) {
 }
 
 function formatYaxis(value) {
+  // console.log('value en KwH', value);
   if (value === 0) return '0 Wh';
   if (value < 1000000) return `${value / 1000} kWh`;
   return `${value / 1000000} MWh`;

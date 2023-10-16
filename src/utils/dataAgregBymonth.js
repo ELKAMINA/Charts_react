@@ -2,9 +2,9 @@
 
 import transformingData from './datatransformation';
 
+/* Agréger les données par mois */
 const agregation = (rawData, choosenYear) => {
   const aggregatedData = {};
-  console.log('rawData ', rawData);
   const filterOnYear = rawData.filter((e) => e.date.startsWith(choosenYear));
   filterOnYear.forEach((entry) => {
     const month = entry.date.split('-')[1];
@@ -27,20 +27,3 @@ const agregation = (rawData, choosenYear) => {
 };
 
 export default agregation;
-
-// const filterOnYear = rawData
-//   .filter((el) => el.date.startsWith(choosenYear))
-//   .reduce((agg, element) => {
-//     const { date, ...dataWithoutDate } = element;
-//     const month = element.date.split('-')[1];
-//     if (!dataPerMonth[month]) {
-//       dataPerMonth[month] = { month, ...dataWithoutDate };
-//     } else {
-//       Object.keys(dataWithoutDate).forEach((label) => {
-//         dataPerMonth[month][label] = (dataPerMonth[month][label] || 0) + dataWithoutDate[label];
-//       });
-//     }
-//     return dataPerMonth;
-//   }, {});
-// const aggregatedArray = Object.values(filterOnYear);
-// return aggregatedArray;

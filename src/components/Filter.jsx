@@ -103,7 +103,7 @@ function PeriodFilter({ choosenPeriod, setChoosenPeriod }) {
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label={'"month", "day, "year"'}
-                views={['month', 'day', 'year']}
+                views={['day', 'month', 'year']}
                 value={personalised}
                 onChange={(date) => setChoosenPeriod({
                   ...choosenPeriod,

@@ -60,7 +60,6 @@ export function fetchEnergy(uuid) {
       })
       .catch((e) => {
         dispatch(finishLoading());
-        console.log('Test ');
         console.error(e);
       });
   };

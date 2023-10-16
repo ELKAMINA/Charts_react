@@ -3,7 +3,6 @@
 /* eslint-disable default-case */
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-// import { useTheme } from '@mui/material/styles';
 import { ResponsiveBar } from '@nivo/bar';
 import { setRef } from '@mui/material';
 import {
@@ -17,23 +16,40 @@ import agregation from '../utils/dataAgregBymonth';
 import { formatYaxis, generateTickValues, getMaxValue } from '../utils/barChartAxis';
 import { ChangingFormatDate } from '../utils/formatDate';
 
-// import mockBarData from '../test';
-
 function BarChart() {
-  const dispatch = useAppDispatch();
-  const [change, setChange] = React.useState(0);
-  const [transformedData, setTransformedData] = React.useState([]);
-  const [keys, setKeys] = React.useState([]);
+  /* Récupération de l'uuid du projet à partir de l'url  */
   const path = window.location.pathname;
   const uuid = path.split('/')[2];
-  let bottomTickValues;
+  /* ******* */
+  const dispatch = useAppDispatch();
+  const [keys, setKeys] = React.useState([]);
+  const [change, setChange] = React.useState(0);
   const [showChart, setShowChart] = React.useState(true);
+  const [transformedData, setTransformedData] = React.useState([]);
+  const filteredperiod = React.useRef([]);
+  // eslint-disable-next-line no-unused-vars
+  let maxDataValue;
+  let getTickValues;
+  const [choosenPeriod, setChoosenPeriod] = React.useState({
+    range: '',
+    from: '',
+    to: '',
+    month: '',
+    day: '',
+    year: '',
+  });
 
+  let bottomTickValues;
+
+  /* Récupération des données du projet  */
   React.useEffect(() => {
     dispatch(fetchEnergy(uuid));
   }, [dispatch, uuid]);
+  /* ******* */
 
   const rawData = useAppSelector(selectEnergy);
+
+  /* Transformation et prépartion des données du projet pour la représnetation graphique */
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -53,20 +69,11 @@ function BarChart() {
       setKeys([]);
     };
   }, [rawData]);
+  /* ******* */
 
-  const filteredperiod = React.useRef([]);
-  // eslint-disable-next-line no-unused-vars
-  let maxDatavAlue;
-  let getTickValues;
-  const [choosenPeriod, setChoosenPeriod] = React.useState({
-    range: '',
-    from: '',
-    to: '',
-    month: '',
-    day: '',
-    year: '',
-  });
+  /* Re-render du graph et transfo des données selon Time period choisie par l'utilisateur */
   React.useEffect(() => {
+    // console.log('transformed Data ', transformedData);
     switch (choosenPeriod.range) {
       case 'Day':
         const formattedDate = `${choosenPeriod.year}-${choosenPeriod.month}-${choosenPeriod.day}`;
@@ -91,7 +98,6 @@ function BarChart() {
         const startDate = new Date(filteredperiod.current[0]?.date);
         const endDate = new Date(filteredperiod.current[filteredperiod.current.length - 1]?.date);
         const dateDifference = differenceInDays(endDate, startDate);
-        console.log('date difference ', dateDifference);
         if (dateDifference > 35) {
           setShowChart(false);
         } else {
@@ -104,9 +110,11 @@ function BarChart() {
         setChange((prevChange) => prevChange + 1);
         break;
     }
-    maxDatavAlue = getMaxValue(filteredperiod.current);
-    getTickValues = generateTickValues(maxDatavAlue);
+    maxDataValue = getMaxValue(filteredperiod.current);
+    getTickValues = generateTickValues(maxDataValue);
+    // console.log('filtered ', filteredperiod.current);
   }, [choosenPeriod, showChart]);
+  /* ******* */
 
   return (
     <>
@@ -121,7 +129,7 @@ function BarChart() {
         }}
         padding={0.4}
         innerPadding={1}
-        maxValue={maxDatavAlue}
+        maxValue={maxDataValue}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: false }}
         valueFormat=" >-"
@@ -160,12 +168,13 @@ function BarChart() {
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 60,
+          tickRotation: 30,
           legend: 'Period',
           legendPosition: 'middle',
           legendOffset: 43,
           tickValues: bottomTickValues,
-          format: (value) => ChangingFormatDate(value),
+          // format: (value) => ChangingFormatDate(value, choosenPeriod),
+          format: choosenPeriod.range !== 'YearMonthly' ? (value) => ChangingFormatDate(value, choosenPeriod) : '',
         }}
         axisLeft={{
           tickSize: 7,
